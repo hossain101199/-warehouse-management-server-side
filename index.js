@@ -16,12 +16,35 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-async function run() {}
+// ---------------------------------------------------------------------------
+async function run() {
+  try {
+    await client.connect();
+    const collection = client
+      .db("healthy-health-warehouse")
+      .collection("products");
+    // get api---------------------------------------------------------------------------
+    app.get("/products", async (req, res) => {
+      const query = {};
+      const cursor = collection.find(query);
+      const products = await cursor.toArray();
+      res.send(products);
+    });
+    // create api---------------------------------------------------------------------------
+    app.post("/products", async (req, res) => {
+      const newproducts = req.body;
+      const products = await collection.insertOne(newproducts);
+      res.send(products);
+    });
+  } finally {
+    // await client.close();
+  }
+}
 run().catch(console.dir);
 
 // ---------------------------------------------------------------------------
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("healthy-health-warehouse");
 });
 // ---------------------------------------------------------------------------
 app.listen(port, () => {
