@@ -23,14 +23,14 @@ async function run() {
     const collection = client
       .db("healthy-health-warehouse")
       .collection("products");
-    // get api *http://localhost:5000/products*---------------------------------------------------------------------------
+    // get api *https://healthy-health-warehouse.herokuapp.com/products*---------------------------------------------------------------------------
     app.get("/products", async (req, res) => {
       const query = {};
       const cursor = collection.find(query);
       const products = await cursor.toArray();
       res.send(products);
     });
-    // create api *http://localhost:5000/products*---------------------------------------------------------------------------
+    // create api *https://healthy-health-warehouse.herokuapp.com/products*---------------------------------------------------------------------------
     app.post("/products", async (req, res) => {
       const newproducts = req.body;
       const products = await collection.insertOne(newproducts);
