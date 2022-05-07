@@ -40,7 +40,13 @@ async function run() {
       }
       res.send(products);
     });
-
+    // get api *https://healthy-health-warehouse.herokuapp.com/products/:id*---------------------------------------------------------------------------
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const product = await collection.findOne(query);
+      res.send(product);
+    });
     // create api *https://healthy-health-warehouse.herokuapp.com/products*---------------------------------------------------------------------------
     app.post("/products", async (req, res) => {
       const newproducts = req.body;
