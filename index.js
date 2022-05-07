@@ -25,18 +25,29 @@ async function run() {
       .collection("products");
     // get api *https://healthy-health-warehouse.herokuapp.com/products*---------------------------------------------------------------------------
     app.get("/products", async (req, res) => {
+      const page = parseInt(req.query.page);
+      const size = parseInt(req.query.size);
       const query = {};
       const cursor = collection.find(query);
-      const products = await cursor.toArray();
+      let products;
+      if (page || size) {
+        products = await cursor
+          .skip(page * size)
+          .limit(size)
+          .toArray();
+      } else {
+        products = await cursor.toArray();
+      }
       res.send(products);
     });
+
     // create api *https://healthy-health-warehouse.herokuapp.com/products*---------------------------------------------------------------------------
     app.post("/products", async (req, res) => {
       const newproducts = req.body;
       const products = await collection.insertOne(newproducts);
       res.send(products);
     });
-    // update products---------------------------------------------------------------------------
+    // update products *https://healthy-health-warehouse.herokuapp.com/products/:id*---------------------------------------------------------------------------
     app.put("/products/:id", async (req, res) => {
       const id = req.params.id;
       const updateproducts = req.body;
@@ -50,13 +61,19 @@ async function run() {
       const products = await collection.updateOne(filter, updatedDoc, options);
       res.send(products);
     });
-    // Delete products-----------------------------------------------------------------------
+    // Delete products *https://healthy-health-warehouse.herokuapp.com/products/:id*-----------------------------------------------------------------------
     app.delete("/products/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       const products = await collection.deleteOne(query);
       res.send(products);
     });
+    // Product count *https://healthy-health-warehouse.herokuapp.com/productCount*---------------------------------------------------------------------------
+    app.get("/productCount", async (req, res) => {
+      const products = await collection.estimatedDocumentCount();
+      res.send({ products });
+    });
+
     // ---------------------------------------------------------------------------
   } finally {
     // await client.close();
