@@ -40,7 +40,7 @@ async function run() {
       }
       res.send(products);
     });
-    // get api *https://healthy-health-warehouse.herokuapp.com/products/:id*---------------------------------------------------------------------------
+    // get one api *https://healthy-health-warehouse.herokuapp.com/products/:id*---------------------------------------------------------------------------
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
@@ -61,7 +61,13 @@ async function run() {
       const options = { upsert: true };
       const updatedDoc = {
         $set: {
-          name: updateproducts.name,
+          Name: updateproducts.Name,
+          Quantity: updateproducts.Quantity,
+          Price: updateproducts.Price,
+          Supplier: updateproducts.Supplier,
+          Image: updateproducts.Image,
+          Email: updateproducts.Email,
+          Description: updateproducts.Description,
         },
       };
       const products = await collection.updateOne(filter, updatedDoc, options);
