@@ -94,6 +94,10 @@ async function run() {
       const products = await collection.estimatedDocumentCount();
       res.send({ products });
     });
+    //---------------------------------------------------------------------------
+    app.post("/login", async (req, res) => {
+      res.send({ success: true });
+    });
 
     // ---------------------------------------------------------------------------
   } finally {
